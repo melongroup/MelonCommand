@@ -1,0 +1,1 @@
+xcopy dest\*.js \\192.168.1.4\webgl\melon\ /s /e /h /r /k /y /d
