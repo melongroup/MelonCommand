@@ -20014,4 +20014,6 @@ var rf;
     rf.StandardMaterial = StandardMaterial;
 })(rf || (rf = {}));
 //# sourceMappingURL=stage3d.js.map
-global.rf = rf;global.rf_v3_identity = rf_v3_identity;global.rf_m3_identity = rf_m3_identity;global.rf_m2_identity = rf_m2_identity;global.rf_m3_temp = rf_m3_temp;console.log("publish:version:trunk date:Mon Jan 21 2019 12:03:30 GMT+0800 (中国标准时间)");
+global.rf = rf;global.rf_v3_identity = rf_v3_identity;global.rf_m3_identity = rf_m3_identity;global.rf_m2_identity = rf_m2_identity;global.rf_m3_temp = rf_m3_temp;
+function rfversion(){return "version:trunk date:Mon Jan 21 2019 16:18:01 GMT+0800 (中国标准时间)";}
+global.rfversion = rfversion;
