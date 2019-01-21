@@ -68,14 +68,15 @@ async function main(){
     if(config.v || config.version){
         let version = new File(process.env.APPDATA + "\\npm\\node_modules\\melon\\version.txt").readUTF8().trim();
         console.log("version:"+version);
-        return
+        return;
     }
     
-
-
     if(config.create){
-        await createProject()
-    }else if(config.c || config.compiler){
+        await createProject();
+        return;
+    }
+    
+    if(config.c || config.compiler){
 
     }
     // console.log($path.resolve(""));
