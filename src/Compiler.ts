@@ -1,10 +1,7 @@
 ///<reference path="./File.ts" />
 
 import { File } from "./File";
-import { $path } from "./Core";
-
-const { exec } = require('child_process');
-
+import { $path, doCommand } from "./Core";
 export interface TSCompilerOptions{
     target:string;
     module:string;
@@ -205,14 +202,7 @@ export async function compile(option:CompilerOption){
 // }
 
 
-export async function doCommand(cmd:string){
-    return await new Promise(resolve => {
-        exec(cmd, { encoding: 'buffer' }, (error, stdout) => {
-            stdout = new TextDecoder("gbk").decode(stdout);
-            resolve([error,stdout])
-        });
-    });
-}
+
 
 
 

@@ -37,7 +37,6 @@ async function main(){
     }
     
     console.log($path.resolve(""));
-    console.log(process);
 }
 
 main();
