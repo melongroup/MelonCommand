@@ -10,7 +10,7 @@
     
     // "watch": false,
     // "module": "commonjs",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
-    "outDir": "./bin-debug/",
+    "outDir": "./dest/bin/",
     // "sourceMap":true,
     "watch": true,
 
@@ -22,7 +22,8 @@
    
     "lib": [
       "es5",
-      "dom"
+      "dom",
+      "es2015.promise"
     ]
   }
   ,
@@ -31,7 +32,7 @@
   ],
   "exclude": [
     "think/**/*",
-    // "src/com/youbt/rfreference.ts",
+    "rfreference",
     ".d.ts",
     "Interface"
   ]

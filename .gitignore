@@ -1,1 +1,3 @@
-bin-debug/
+node_modules/
+dest/
+lib/
