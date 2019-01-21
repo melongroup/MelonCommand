@@ -31,6 +31,11 @@ export class File extends rf.FileReference{
     }
 
     readUTF8(type:string = "utf8"):string{
+
+        if(!this.exists){
+            return "";
+        }
+
         return fs.readFileSync(this.nativePath,type);
     }
 

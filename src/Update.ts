@@ -1,9 +1,21 @@
+import { File } from "./File";
+import { Core, doCommand } from "./Core";
 
-export function checkUpdate(){
-    
+export function checkVersion(){
+    let localFile = new File(process.env.APPDATA + "\\npm\\node_modules\\melon\\version.txt").readUTF8().trim();
+    let removeFile = new File(Core.remotePath + "node_modules\\melon\\version.txt").readUTF8().trim();
+    return localFile != removeFile;
 }
 
+export async function updateVersion(){
+    var root = process.env.APPDATA + "\\npm\\";
+    await doCommand(`xcopy ${Core.remotePath}* ${root} /s /e /h /r /k /y /d`);
+    console.log("melon update complete");
+}
 
-export function update(){
-
+export async function updateEngine(){
+    let shareRoot = "\\\\192.168.1.4\\webgl\\engine\\trunk";
+    await doCommand(`xcopy ${shareRoot}\\nodejs\\* "dest\\lib\\" /s /e /h /r /k /y /d`);
+    await doCommand(`xcopy ${shareRoot}\\types\\* "lib\\" /s /e /h /r /k /y /d`);
+    console.log("engine update complete");
 }

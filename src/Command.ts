@@ -1,5 +1,13 @@
+require("./lib/stage3d.js");
+require("./lib/wechat.js");
+require("./lib/zlib.min.js"); 
+
 import { $path, Core, IArgs } from "./Core";
 import { createProject } from "./Create";
+import { updateVersion, checkVersion, updateEngine } from "./Update";
+import { File } from "./File";
+
+
 
 function convertParam(str:string){
     while(str.charAt(0) == "-"){
@@ -29,14 +37,48 @@ function convertArgv(argv:string[]){
 
 
 async function main(){
+
+
     var config = Core.config = convertArgv(process.argv) as IArgs;
+
+
+    let needUpdateVersion = checkVersion();
+    
+
+    if(config.setup){
+        if(needUpdateVersion){
+            await updateVersion();
+        }else{
+            console.log("it's last version now") 
+        }
+
+        return;
+    }
+
+    if(needUpdateVersion){
+        console.log("find new Melon version! please update by command 'melon setup'");
+        return;
+    }
+
+    if(config.u || config.update){
+        await updateEngine();
+        return;
+    }
+
+    if(config.v || config.version){
+        let version = new File(process.env.APPDATA + "\\npm\\node_modules\\melon\\version.txt").readUTF8().trim();
+        console.log("version:"+version);
+        return
+    }
+    
+
+
     if(config.create){
         await createProject()
     }else if(config.c || config.compiler){
 
     }
-    
-    console.log($path.resolve(""));
+    // console.log($path.resolve(""));
 }
 
 main();
