@@ -1,7 +1,7 @@
 @IF EXIST "%~dp0\node.exe" (
-  "%~dp0\node.exe"  "%~dp0\node_modules\uglify-js\bin\uglifyjs" %*
+  "%~dp0\node.exe"  "%~dp0\node_modules\melon\Command.js" %*
 ) ELSE (
   @SETLOCAL
   @SET PATHEXT=%PATHEXT:;.JS;=;%
-  node  "%~dp0\node_modules\uglify-js\bin\uglifyjs" %*
+  node  "%~dp0\node_modules\melon\Command.js" %*
 )

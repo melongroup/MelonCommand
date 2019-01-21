@@ -1,4 +1,4 @@
-import { IArgs, Core } from "./Core";
+import { $path, Core, IArgs } from "./Core";
 import { createProject } from "./Create";
 
 function convertParam(str:string){
@@ -32,7 +32,12 @@ async function main(){
     var config = Core.config = convertArgv(process.argv) as IArgs;
     if(config.create){
         await createProject()
+    }else if(config.c || config.compiler){
+
     }
+    
+    console.log($path.resolve(""));
+    console.log(process);
 }
 
 main();
