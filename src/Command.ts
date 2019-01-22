@@ -6,6 +6,7 @@ import { $path, Core, IArgs } from "./Core";
 import { createProject } from "./Create";
 import { updateVersion, checkVersion, updateEngine } from "./Update";
 import { File } from "./File";
+import { referenceJs } from "./Index";
 
 
 
@@ -79,6 +80,11 @@ async function main(){
     if(config.c || config.compiler){
 
     }
+
+
+    referenceJs();
+
+    
     // console.log($path.resolve(""));
 }
 
