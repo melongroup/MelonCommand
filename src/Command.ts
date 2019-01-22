@@ -7,6 +7,7 @@ import { createProject } from "./Create";
 import { updateVersion, checkVersion, updateEngine } from "./Update";
 import { File } from "./File";
 import { referenceJs } from "./Index";
+import { releaseProject } from "./Publish";
 
 
 
@@ -76,15 +77,13 @@ async function main(){
         await createProject();
         return;
     }
-    
-    if(config.c || config.compiler){
 
+    if(config.release){
+        await releaseProject();
+        return;
     }
-
-
-    referenceJs();
-
     
+    referenceJs();
     // console.log($path.resolve(""));
 }
 

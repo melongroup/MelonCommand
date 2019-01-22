@@ -9,8 +9,7 @@ export interface IArgs{
 
     create:boolean;
 
-    c:boolean; //编译
-    compiler:boolean;
+    release:boolean;
 }
 
 
@@ -54,8 +53,13 @@ const { exec } = require('child_process') as typeof __exec;
 export async function doCommand(cmd:string){
     return await new Promise(resolve => {
         exec(cmd, { encoding: 'buffer' }, (error, stdout) => {
-            // let err = new TextDecoder("GBK").decode(stdout);
-            resolve([error,stdout])
+            let err:string;
+            try {
+                err = new TextDecoder("GBK").decode(stdout);
+            } catch (error) {
+                err = rf.byte_decodeUTF8(stdout);
+            }
+            resolve([error,err])
         });
     });
 }
@@ -194,4 +198,9 @@ export function getCompilerFiles(ts:TSConfigOptions){
     });
 
     return getReference(result,ts);
+}
+
+
+export function loger(msg:string){
+    console.log(msg);
 }
