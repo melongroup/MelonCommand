@@ -10,6 +10,10 @@ export interface IArgs{
     create:boolean;
 
     release:boolean;
+
+    web:boolean;
+
+    nodejs:boolean;
 }
 
 
@@ -37,7 +41,10 @@ export interface TSConfigOptions{
 
 export class Core{
     static config:IArgs;
-    static remotePath = "\\\\192.168.1.4\\webgl\\melon\\"
+    static remotePath = "\\\\192.168.1.4\\webgl\\"
+    static remoteMelon = Core.remotePath +"melon\\"
+    // static remoteCreate = Core.remotePath +"project\\"
+    // static remoteEngine = Core.remotePath +"engine\\"
 }
 
 import * as __path from "path";
@@ -50,16 +57,32 @@ import * as __exec from "child_process";
 import { File } from "./File";
 const { exec } = require('child_process') as typeof __exec;
 
+import * as __iconv from "iconv-lite";
+
 export async function doCommand(cmd:string){
     return await new Promise(resolve => {
         exec(cmd, { encoding: 'buffer' }, (error, stdout) => {
             let err:string;
             try {
-                err = new TextDecoder("GBK").decode(stdout);
+                // err = require( "iconv-lite").decode(stdout,"GBK");
+                err = __iconv.decode(stdout,"GBK");
+                // err = new TextDecoder("GBK").decode(stdout);
             } catch (error) {
                 err = rf.byte_decodeUTF8(stdout);
             }
             resolve([error,err])
+        });
+    });
+}
+
+export async function confirm(msg:string){
+    return await new Promise(resolve => {
+        process.stdout.write(msg);
+        process.stdin.resume();
+        process.stdin.setEncoding("utf-8");
+        process.stdin.on("data", function(chunk) {
+            process.stdin.pause();
+            resolve(chunk.trim())
         });
     });
 }

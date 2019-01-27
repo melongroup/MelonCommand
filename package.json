@@ -17,5 +17,8 @@
   "license": "ISC",
   "dependencies": {
     "@types/node": "^10.12.18"
+  },
+  "devDependencies": {
+    "iconv-lite": "^0.4.24"
   }
 }

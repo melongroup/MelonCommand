@@ -9,4 +9,7 @@ async function doCommand(cmd) {
         });
     });
 }
-doCommand("xcopy \\\\192.168.1.4\\webgl\\melon\\* "+root+" /s /e /h /r /k /y /d")
+
+await doCommand("xcopy \\\\192.168.1.4\\webgl\\melon\\* "+root+" /s /e /h /r /k /y /d");
+
+await doCommand("cnpm i iconv-lite -g");
