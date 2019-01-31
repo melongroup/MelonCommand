@@ -1,7 +1,6 @@
-import { confirm, doCommand, Core, getTSConfig, $path } from "./Core";
-import { LOG_COLOR, debugLog } from "./Debug";
+import { $path, confirm, Core, doCommand } from "./Core";
+import { debugLog, LOG_COLOR } from "./Debug";
 import { File } from "./File";
-import { debuglog } from "util";
 
 export async function createProject(){
     //todo; 

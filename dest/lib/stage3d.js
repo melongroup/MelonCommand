@@ -1,11 +1,8 @@
 rf = global.rf;
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -7419,7 +7416,7 @@ var rf;
             if (_tweener) {
                 rf.tweenStop(_tweener);
             }
-            this._tweener = rf.tweenTo({ scale: 0.9 }, 200, tm, this, rf.ease_quartic_out);
+            this._tweener = rf.tweenTo({ scale: 0.9 }, 200, rf.defaultTimeMixer, this, rf.ease_quartic_out);
         };
         Sprite.prototype.pivotMouseUpHandler = function (event) {
             rf.ROOT.off(53, this.pivotMouseUpHandler, this);
@@ -7427,7 +7424,7 @@ var rf;
             if (_tweener) {
                 rf.tweenStop(_tweener);
             }
-            this._tweener = _tweener = rf.tweenTo({ scale: 1 }, 200, tm, this, rf.ease_back_out);
+            this._tweener = _tweener = rf.tweenTo({ scale: 1 }, 200, rf.defaultTimeMixer, this, rf.ease_back_out);
             _tweener.complete = this.scaleTweenComplete.bind(this);
         };
         Sprite.prototype.scaleTweenComplete = function (t) {
@@ -10028,6 +10025,7 @@ var rf;
         Button.prototype.bindComponents = function () {
             this.mouseChildren = false;
             this.doEnabled();
+            this.buttonModel(this.w >> 1, this.h >> 1, 0);
         };
         Button.prototype.getObjectByPoint = function (dx, dy, scale) {
             return _super.prototype.getObjectByPoint.call(this, dx, dy, 1 / this._scaleX);
@@ -16338,6 +16336,7 @@ var rf;
             var angle = Math.atan2(dy * rf.SY, dx);
             var sin = Math.sin(angle);
             var cos = Math.cos(angle);
+            var g = HitForceAction.g, a = HitForceAction.AccelerationOfFriction;
             var tmp;
             speed0.x = cos * speedxy;
             speed0.y = sin * speedxy;
@@ -16345,12 +16344,11 @@ var rf;
             pos0.x = actor._x;
             pos0.y = actor._y * rf.SY;
             pos0.z = actor._z;
-            var a = HitForceAction.AccelerationOfFriction;
             accelerate0.v4_scale(0);
             tmp = a + addxy;
             accelerate0.x = tmp * cos;
             accelerate0.y = tmp * sin;
-            accelerate0.z = HitForceAction.g;
+            accelerate0.z = g;
             if (tmp < 0) {
                 var t_1 = -speedxy / tmp;
                 accelerate0.w = Math.min(~~duration, t_1);
@@ -16368,16 +16366,13 @@ var rf;
                 var sqrt_t_1 = accelerate0.w * accelerate0.w;
                 pos1.x = pos0.x + speed0.x * accelerate0.w + 0.5 * accelerate0.x * sqrt_t_1;
                 pos1.y = pos0.y + speed0.y * accelerate0.w + 0.5 * accelerate0.y * sqrt_t_1;
-                pos1.z = pos0.z + speed0.z * accelerate0.w + 0.5 * accelerate0.z * sqrt_t_1;
                 if (pos1.z < 0) {
                     pos1.z = 0;
                 }
                 speed1.x = speed0.x + accelerate0.x * accelerate0.w;
                 speed1.y = speed0.y + accelerate0.y * accelerate0.w;
-                speed1.z = speed0.z + accelerate0.z * accelerate0.w;
                 accelerate1.x = a * cos;
                 accelerate1.y = a * sin;
-                accelerate1.z = HitForceAction.g;
             }
             var spxy = speed1.v2_length;
             var t = -spxy / a;
@@ -16386,27 +16381,16 @@ var rf;
             this.t2 = this.t1 + t;
             pos2.x = pos1.x + speed1.x * t + 0.5 * accelerate1.x * sqrt_t;
             pos2.y = pos1.y + speed1.y * t + 0.5 * accelerate1.y * sqrt_t;
-            pos2.z = pos1.z + speed1.z * t + 0.5 * accelerate1.z * sqrt_t;
-            if (speed0.v2_length < 0.000001 && speed1.v2_length < 0.000001) {
-                if (pos2.z <= 0) {
-                    pos2.z = 10;
-                }
-            }
-            if (pos2.z < 0) {
-                pos2.z = 0;
-                this.t3 = this.t2;
-            }
-            else {
-                var t_2 = (-speed1.z - Math.sqrt(speed1.z * speed1.z - 2 * HitForceAction.g * pos2.z)) / HitForceAction.g;
-                this.t3 = this.t2 + t_2;
-            }
+            var vt = -Math.sqrt(-2 * g * pos0.z + speedz * speedz);
+            t = (vt - speedz) / g;
+            this.t3 = Math.max(this.starttime + t, this.t2);
             this.stopXY = false;
         };
         HitForceAction.prototype.doStart = function (actor, params) {
             rf.gameTick.addTick(this);
         };
         HitForceAction.prototype.update = function (now, interval) {
-            var _a = this, actor = _a.actor, speed0 = _a.speed0, speed1 = _a.speed1, pos0 = _a.pos0, pos1 = _a.pos1, pos2 = _a.pos2, accelerate0 = _a.accelerate0, accelerate1 = _a.accelerate1, t1 = _a.t1, t2 = _a.t2, t3 = _a.t3;
+            var _a = this, actor = _a.actor, speed0 = _a.speed0, speed1 = _a.speed1, pos0 = _a.pos0, pos1 = _a.pos1, pos2 = _a.pos2, accelerate0 = _a.accelerate0, accelerate1 = _a.accelerate1, t1 = _a.t1, t2 = _a.t2, t3 = _a.t3, starttime = _a.starttime;
             var g = HitForceAction.g, t_pos = HitForceAction.t_pos, t_speed = HitForceAction.t_speed;
             var t;
             if (now >= t3) {
@@ -16419,32 +16403,30 @@ var rf;
                 }
                 this.end();
             }
-            else if (now >= t2) {
-                t = now - t2;
-                actor.z = pos1.z + speed1.z * t + 0.5 * g * t * t;
-            }
             else {
-                var p0 = void 0;
-                var sp0 = void 0;
-                var acc = void 0;
-                if (now >= t1) {
-                    p0 = pos1;
-                    sp0 = speed1;
-                    acc = accelerate1;
-                    t = now - t1;
+                var t_h = now - starttime;
+                var z = pos0.z + speed0.z * t_h + 0.5 * g * t_h * t_h;
+                if (z < 0) {
+                    z = 0;
                 }
-                else {
-                    p0 = pos0;
-                    sp0 = speed0;
-                    acc = accelerate0;
-                    t = now - this.starttime;
-                }
-                var sqrt_t = t * t;
-                t_pos.z = p0.z + sp0.z * t + 0.5 * acc.z * sqrt_t;
-                if (t_pos.z < 0) {
-                    t_pos.z = 0;
-                }
-                if (!this.stopXY) {
+                actor.z = z;
+                if (now < t2 && !this.stopXY) {
+                    var p0 = void 0;
+                    var sp0 = void 0;
+                    var acc = void 0;
+                    if (now >= t1) {
+                        p0 = pos1;
+                        sp0 = speed1;
+                        acc = accelerate1;
+                        t = now - t1;
+                    }
+                    else {
+                        p0 = pos0;
+                        sp0 = speed0;
+                        acc = accelerate0;
+                        t = now - this.starttime;
+                    }
+                    var sqrt_t = t * t;
                     t_pos.x = p0.x + sp0.x * t + 0.5 * acc.x * sqrt_t;
                     t_pos.y = p0.y + sp0.y * t + 0.5 * acc.y * sqrt_t;
                     var ty = t_pos.y / rf.SY;
@@ -16460,12 +16442,11 @@ var rf;
                         pos2.x = t_pos.x;
                         pos2.y = t_pos.y;
                     }
-                }
-                actor.z = t_pos.z;
-                var camera = rf.ROOT.camera2D;
-                if (actor == camera.watchTarget) {
-                    actor.updateSceneTransform();
-                    camera.update(0, 0);
+                    var camera = rf.ROOT.camera2D;
+                    if (actor == camera.watchTarget) {
+                        actor.updateSceneTransform();
+                        camera.update(0, 0);
+                    }
                 }
             }
         };
@@ -16474,7 +16455,7 @@ var rf;
         };
         HitForceAction.TransformAcc = 0.001 * 0.001;
         HitForceAction.TransformSpeed = 0.001;
-        HitForceAction.g = -50 * 100 * HitForceAction.TransformAcc;
+        HitForceAction.g = -40 * 100 * HitForceAction.TransformAcc;
         HitForceAction.AccelerationOfFriction = -20 * 100 * HitForceAction.TransformAcc;
         HitForceAction.MaxSpeed = 1000;
         HitForceAction.t_pos = rf.newVector3D();
@@ -17652,6 +17633,7 @@ var rf;
             if (render != this.target && (nativeRender || renderer)) {
                 this.i3DRender.__render_next = render;
                 this.i3DRender = render;
+                this.i3DRender.__render_next = undefined;
                 return;
             }
             var $graphics = render.$graphics;
@@ -17672,6 +17654,7 @@ var rf;
                     currentRenderData.current.__render_next = render;
                 }
                 currentRenderData.current = render;
+                currentRenderData.current.__render_next = undefined;
                 render.$vcIndex = currentRenderData.count;
                 var sources = this.sources;
                 var sourceIndex = sources.indexOf(render.source);
@@ -20015,5 +19998,5 @@ var rf;
 })(rf || (rf = {}));
 //# sourceMappingURL=stage3d.js.map
 global.rf = rf;global.rf_v3_identity = rf_v3_identity;global.rf_m3_identity = rf_m3_identity;global.rf_m2_identity = rf_m2_identity;global.rf_m3_temp = rf_m3_temp;
-function rfversion(){return "version:trunk date:Mon Jan 21 2019 16:18:01 GMT+0800 (中国标准时间)";}
+function rfversion(){return "version:trunk date:Fri Jan 25 2019 14:40:22 GMT+0800 (中国标准时间)";}
 global.rfversion = rfversion;
