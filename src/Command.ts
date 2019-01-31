@@ -8,6 +8,7 @@ import { updateVersion, checkVersion, updateEngine } from "./Update";
 import { File } from "./File";
 import { referenceJs } from "./Index";
 import { releaseProject } from "./Publish";
+import { LOG_COLOR } from "./Debug";
 
 
 
@@ -58,7 +59,7 @@ async function main(){
     }
 
     if(needUpdateVersion){
-        console.log("find new Melon version! please update by command 'melon setup'");
+        console.log(`find new Melon version! please update by command '${LOG_COLOR.GREEN}melon setup${LOG_COLOR.WHITE}'`);
         return;
     }
 

@@ -59,6 +59,15 @@ const { exec } = require('child_process') as typeof __exec;
 
 import * as __iconv from "iconv-lite";
 
+
+export async function xCopy(from:string,to:string){
+    from = from.replace(/\//g,"\\");
+    to = to.replace(/\//g,"\\");
+    await doCommand(`xcopy ${from}* ${to} /s /e /h /r /k /y /d`);
+}
+
+
+
 export async function doCommand(cmd:string){
     return await new Promise(resolve => {
         exec(cmd, { encoding: 'buffer' }, (error, stdout) => {

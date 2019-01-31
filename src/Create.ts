@@ -32,6 +32,12 @@ export async function createProject(){
             await doCommand(`melon u`);
             debugLog("install packages ,maybe use 30s");
             await doCommand(`cnpm i`);
+            //判断 iconv-lite 是否存在
+            await doCommand(`npm link iconv-lite`);
+            await doCommand(`tsc --watch false`);
+            await doCommand(`melon`);
+
+
         break;
     }
 

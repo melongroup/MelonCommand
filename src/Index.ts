@@ -1,4 +1,4 @@
-import { getTSConfig, getCompilerFiles, compiler_checkAvailable, TSConfigOptions } from "./Core";
+import { getTSConfig, getCompilerFiles, compiler_checkAvailable, TSConfigOptions, $path, doCommand, xCopy } from "./Core";
 import { File } from "./File";
 
 export function referenceJs(){
@@ -8,15 +8,36 @@ export function referenceJs(){
         return;
     }
 
-    let list = getCompilerFiles(ts);
 
-    console.log(`${list.length}个文件`);
+    let assetsPath:string;
 
-    let out = updateIndexHtml(ts,list);
+    
 
-    if(out.nativePath.indexOf("D:/workspace_ts/") == 0){
-        console.log(`测试地址: ${out.nativePath.replace("D:/workspace_ts/","http://127.0.0.1/ts/")}`);
+    if(ts.templete){
+        //web项目
+        let list = getCompilerFiles(ts);
+        console.log(`${list.length}个文件`);
+        let out = updateIndexHtml(ts,list);
+        if(out.nativePath.indexOf("D:/workspace_ts/") == 0){
+            console.log(`测试地址: ${out.nativePath.replace("D:/workspace_ts/","http://127.0.0.1/ts/")}`);
+        }
+        assetsPath = $path.resolve("bin-debug/")
+    }else{
+        assetsPath = $path.resolve("dest/");
     }
+
+
+    let file = new File($path.resolve("assets"));
+    if(file.exists && !file.isFile()){
+        xCopy(file.nativePath,assetsPath + "/assets/");
+    }
+
+    file = new File($path.resolve("js"));
+    if(file.exists && !file.isFile()){
+        xCopy(file.nativePath,assetsPath + "/lib/");
+    }
+    
+    
 }
 
 
