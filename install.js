@@ -1,15 +1,17 @@
-
-var root = process.env.APPDATA + "\\npm\\";
-const { exec } = require('child_process');
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const child_process_1 = require("child_process");
 async function doCommand(cmd) {
-    return await new Promise(resolve => {
-        exec(cmd, { encoding: 'buffer' }, (error, stdout) => {
+    return new Promise(resolve => {
+        child_process_1.exec(cmd, { encoding: 'buffer' }, (error, stdout) => {
             // let err = new TextDecoder("gbk").decode(stdout);
             resolve([error, stdout]);
         });
     });
 }
-
-await doCommand("xcopy \\\\192.168.1.4\\webgl\\melon\\* "+root+" /s /e /h /r /k /y /d");
-
-await doCommand("cnpm i iconv-lite -g");
+async function setup() {
+    let root = process.env.APPDATA + "\\npm\\";
+    await doCommand("xcopy \\\\192.168.1.4\\webgl\\melon\\* " + root + " /s /e /h /r /k /y /d");
+}
+setup();
+//# sourceMappingURL=Install.js.map

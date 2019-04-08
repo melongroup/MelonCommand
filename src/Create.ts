@@ -21,7 +21,12 @@ export async function createProject(){
 
     switch(data){
         case "1":
-
+            debugLog("copy files");
+            await doCommand(`xcopy ${Core.remotePath}project\\web\\* ${file.nativePath.replace(/\//g,"\\")} /s /e /h /r /k /y /d`);
+            debugLog("update engine");
+            await doCommand(`melon u`);
+            await doCommand(`tsc --watch false`);
+            await doCommand(`melon`);
         break;
         case "2":
             debugLog("copy files");
