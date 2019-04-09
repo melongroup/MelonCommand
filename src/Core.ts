@@ -7,8 +7,10 @@ export interface IArgs{
     u:boolean;
     update:boolean;
 
+    c:boolean;
     create:boolean;
 
+    r:boolean;
     release:boolean;
 
     p:boolean
@@ -19,6 +21,9 @@ export interface IArgs{
     nodejs:boolean;
 
     config:string
+    
+    h:boolean;
+    help:boolean;
 }
 
 

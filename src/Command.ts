@@ -74,21 +74,33 @@ async function main(){
         return;
     }
     
-    if(config.create){
+    if(config.create || config.c){
         await createProject();
         return;
     }
 
-    if(config.release){
+    if(config.release || config.r){
         await releaseProject();
         return;
     }
 
     if(config.p || config.publish){
         await publishProject();
+        return;
+    }
+
+
+    if(config.h || config.help){
+        console.log(`current version:${new File(process.env.APPDATA + "\\npm\\node_modules\\melon\\version.txt").readUTF8().trim()}`)
+        console.log(`   melon setup    --更新melon编译库`)
+        console.log(`   melon update   --更新stage3d wechat 等lib库`)
+        console.log(`   melon create   --创建web nodejs项目`)
+        console.log(`   melon release  --发布release版本`)
+        console.log(`   melon publish  --发布release版本到内网测试服务器`)
+        return;
     }
     
-    // referenceJs();
+    referenceJs();
     // console.log($path.resolve(""));
 }
 
