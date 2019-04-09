@@ -1,4 +1,4 @@
-import { getTSConfig, getCompilerFiles, TSCompilerOptions, TSConfigOptions, doCommand, loger } from "./Core";
+import { getTSConfig, getCompilerFiles, TSCompilerOptions, TSConfigOptions, doCommand, loger, xCopy } from "./Core";
 import { File } from "./File";
 import { updateIndexHtml } from "./Index";
 
@@ -57,6 +57,9 @@ export async function releaseProject(){
     let time = new Date().getTime();
 
     let r = await doCommand("tmp");
+
+    cmdfile.delete()
+
     if(r[0]){
         loger("error:"+r)
     }else{
@@ -71,5 +74,39 @@ export async function releaseProject(){
         loger("error:"+r)
         return;
     }
+
+    
+
+}
+
+
+export async function publishProject(){
+
+    let ts = getTSConfig();
+
+    if(!ts){
+        loger("no tsconfig.json");
+        return;
+    }
+
+    if(!ts.clientRemote){
+        loger("no clientRemote path in tsconfig.json");
+        return;
+    }
+
+    let thisdir = new File(ts.root);
+
+    let [state,value] = await doCommand("git branch") as string[];
+    if(!state){
+        let [,branch] = /\* (.*?)\n/.exec(value) as string[];
+
+        let from = thisdir.resolvePath("bin-release");
+
+        let to = `${ts.clientRemote}\\${branch}\\`
+
+        await xCopy( from.nativePath , to , true );
+
+    }
+
 
 }

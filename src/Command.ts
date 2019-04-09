@@ -7,7 +7,7 @@ import { createProject } from "./Create";
 import { updateVersion, checkVersion, updateEngine } from "./Update";
 import { File } from "./File";
 import { referenceJs } from "./Index";
-import { releaseProject } from "./Publish";
+import { releaseProject, publishProject } from "./Publish";
 import { LOG_COLOR } from "./Debug";
 
 
@@ -83,8 +83,12 @@ async function main(){
         await releaseProject();
         return;
     }
+
+    if(config.p || config.publish){
+        await publishProject();
+    }
     
-    referenceJs();
+    // referenceJs();
     // console.log($path.resolve(""));
 }
 

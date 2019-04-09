@@ -11,9 +11,14 @@ export interface IArgs{
 
     release:boolean;
 
+    p:boolean
+    publish:boolean
+
     web:boolean;
 
     nodejs:boolean;
+
+    config:string
 }
 
 
@@ -37,6 +42,7 @@ export interface TSConfigOptions{
     include:string[];
     exclude:string[];
     templete:string;
+    clientRemote:string;
 }
 
 export class Core{
@@ -60,9 +66,12 @@ const { exec } = require('child_process') as typeof __exec;
 import * as __iconv from "iconv-lite";
 
 
-export async function xCopy(from:string,to:string){
+export async function xCopy(from:string,to:string,debug = false){
     from = from.replace(/\//g,"\\");
     to = to.replace(/\//g,"\\");
+    if(debug){
+        loger(`xcopy ${from}* ${to} /s /e /h /r /k /y /d`);
+    }
     await doCommand(`xcopy ${from}* ${to} /s /e /h /r /k /y /d`);
 }
 
@@ -106,7 +115,13 @@ export function getTSConfig(){
         return r;
     }
 
-    let tsconfig = new File($path.resolve("tsconfig.json"));
+
+    let configPath = Core.config.config;
+    if(!configPath){
+        configPath = "tsconfig.json"
+    }
+
+    let tsconfig = new File($path.resolve(configPath));
 
     if(tsconfig.exists){
         try {

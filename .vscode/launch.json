@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "启动程序",
             "program": "${workspaceFolder}\\dest\\Command.js",
-            "args": [],
+            "args": ["-p"],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
