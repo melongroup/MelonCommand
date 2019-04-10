@@ -47,6 +47,7 @@ export interface TSConfigOptions{
     include:string[];
     exclude:string[];
     templete:string;
+    platform:string;
     clientRemote:string;
 }
 

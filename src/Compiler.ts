@@ -1,7 +1,7 @@
 ///<reference path="./File.ts" />
 
+import { $path, doCommand, TSConfigOptions } from "./Core";
 import { File } from "./File";
-import { $path, doCommand } from "./Core";
 export interface TSCompilerOptions{
     target:string;
     module:string;
@@ -16,14 +16,6 @@ export interface TSCompilerOptions{
     declaration:boolean;
 }
 
-
-export interface TSConfigOptions{
-    root:string;
-    compilerOptions:TSCompilerOptions;
-    include:string[];
-    exclude:string[];
-    templete:string;
-}
 
 
 export var textarea:HTMLTextAreaElement;
@@ -148,6 +140,11 @@ export async function compile(option:CompilerOption){
     }
 
     //index.html
+
+    if(ts.platform){
+        
+    }
+
 
     if(ts.templete){
         let file = root.resolvePath(ts.templete);

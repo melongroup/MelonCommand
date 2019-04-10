@@ -11,23 +11,35 @@ export function referenceJs(){
 
     let assetsPath:string;
 
+    let{platform} = ts
+
+
+    let list = getCompilerFiles(ts);
+    console.log(`${list.length}个文件`);
+
+    if(platform == "web"){
+        updateIndexJson(ts,list);
+    }else{
+        if(ts.templete){
+            //web项目
+            let out = updateIndexHtml(ts,list);
+            if(out.nativePath.indexOf("D:/workspace_ts/") == 0){
+                console.log(`测试地址: ${out.nativePath.replace("D:/workspace_ts/","http://127.0.0.1/ts/")}`);
+            }
+            assetsPath = $path.resolve("bin-debug/")
+        }else{
+            assetsPath = $path.resolve("dest/");
+        }
+    }
     
 
-    if(ts.templete){
-        //web项目
-        let list = getCompilerFiles(ts);
-        console.log(`${list.length}个文件`);
-        let out = updateIndexHtml(ts,list);
-        if(out.nativePath.indexOf("D:/workspace_ts/") == 0){
-            console.log(`测试地址: ${out.nativePath.replace("D:/workspace_ts/","http://127.0.0.1/ts/")}`);
-        }
-        assetsPath = $path.resolve("bin-debug/")
-    }else{
-        assetsPath = $path.resolve("dest/");
+    let file = new File($path.resolve("root"));
+    if(file.exists && !file.isFile()){
+        xCopy(file.nativePath,assetsPath + "/");
     }
 
 
-    let file = new File($path.resolve("assets"));
+    file = new File($path.resolve("assets"));
     if(file.exists && !file.isFile()){
         xCopy(file.nativePath,assetsPath + "/assets/");
     }
@@ -80,4 +92,22 @@ export function updateIndexHtml(ts:TSConfigOptions,list:string[],out?:File){
 
         return undefined;
     }
+}
+
+export function updateIndexJson(ts:TSConfigOptions,list:string[]){
+
+    let file = new File(ts.root).resolvePath(ts.compilerOptions.outDir+"js.json");
+    let result = [] as string[]
+    let len = list.length;
+    for(let i = 0;i<len;i++){
+        let filename = list[i];
+        if(compiler_checkAvailable(filename,ts.exclude)){
+            continue;
+        }
+        result.push(filename);
+    }
+
+    file.writeUTF8(JSON.stringify(result));
+    console.log(`成功生成 js.json ${file.nativePath}`);
+
 }
