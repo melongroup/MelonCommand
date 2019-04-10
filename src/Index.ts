@@ -104,10 +104,16 @@ export function updateIndexJson(ts:TSConfigOptions,list:string[]){
         if(compiler_checkAvailable(filename,ts.exclude)){
             continue;
         }
+        filename = filename.replace(".ts", ".js");
+        filename = filename.replace("src/", "");
         result.push(filename);
     }
-
     file.writeUTF8(JSON.stringify(result));
+
+    if(ts.templete){
+        file = new File(ts.root).resolvePath(ts.templete);
+        file.copyto(new File(ts.root).resolvePath(ts.compilerOptions.outDir+"index.html"));
+    }
     console.log(`成功生成 js.json ${file.nativePath}`);
 
 }
