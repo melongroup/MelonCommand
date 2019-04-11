@@ -1,4 +1,5 @@
 import { getTSConfig, getCompilerFiles, compiler_checkAvailable, TSConfigOptions, $path, doCommand, xCopy } from "./Core";
+
 import { File } from "./File";
 
 export function referenceJs(){
@@ -112,8 +113,12 @@ export function updateIndexJson(ts:TSConfigOptions,list:string[]){
 
     if(ts.templete){
         file = new File(ts.root).resolvePath(ts.templete);
-        file.copyto(new File(ts.root).resolvePath(ts.compilerOptions.outDir+"index.html"));
+        if(file.exists){
+            file.copyto(new File(ts.root).resolvePath(ts.compilerOptions.outDir+"index.html"));
+        }
+        
     }
+
     console.log(`成功生成 js.json ${file.nativePath}`);
 
 }
