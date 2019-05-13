@@ -18,6 +18,8 @@ export function referenceJs(){
     let list = getCompilerFiles(ts);
     console.log(`${list.length}个文件`);
 
+    assetsPath = $path.resolve(ts.compilerOptions.outDir);
+
     if(platform == "web"){
         updateIndexJson(ts,list);
     }else{
@@ -27,11 +29,12 @@ export function referenceJs(){
             if(out.nativePath.indexOf("D:/workspace_ts/") == 0){
                 console.log(`测试地址: ${out.nativePath.replace("D:/workspace_ts/","http://127.0.0.1/ts/")}`);
             }
-            assetsPath = $path.resolve("bin-debug/")
         }else{
             assetsPath = $path.resolve("dest/");
         }
     }
+
+   
     
 
     let file = new File($path.resolve("root"));
