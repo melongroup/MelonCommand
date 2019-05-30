@@ -13,6 +13,8 @@ export interface IArgs{
     r:boolean;
     release:boolean;
 
+    mini:boolean;
+
     p:boolean
     publish:boolean
 
@@ -239,7 +241,7 @@ export function getCompilerFiles(ts:TSConfigOptions){
     
 
     ts.exclude = exclude = formatAssets(exclude);
-    let list =  new File(ts.root).resolvePath(compilerOptions.rootDir).getAllFiles();
+    let list =  new File(ts.root).resolvePath(compilerOptions.rootDir).getAllFiles(undefined,20);
     let result:File[] = [];
     list.forEach(element => {
         if(element.extname == ".ts"){

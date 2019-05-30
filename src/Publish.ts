@@ -1,6 +1,6 @@
-import { getTSConfig, getCompilerFiles, TSCompilerOptions, TSConfigOptions, doCommand, loger, xCopy } from "./Core";
+import { getTSConfig, getCompilerFiles, TSCompilerOptions, TSConfigOptions, doCommand, loger, xCopy, Core } from "./Core";
 import { File } from "./File";
-import { updateIndexHtml } from "./Index";
+import { updateIndexHtml, copyAssetFile } from "./Index";
 
 
 export function compilerGetCommand(list:string[],ts:TSConfigOptions){
@@ -75,7 +75,20 @@ export async function releaseProject(){
         return;
     }
 
-    
+
+
+    let root = thisdir.resolvePath("bin-release/");
+
+    copyAssetFile(root.nativePath.replace(/\//g,"\\"));
+
+    if(Core.config.mini){
+        let jslist = root.getAllFiles(".js",2);
+
+        for (let i = 0; i < jslist.length; i++) {
+            const f = jslist[i];
+            await doCommand(`uglifyjs ${f.nativePath} -m -o ${f.nativePath}`);
+        }
+    }
 
 }
 

@@ -2,6 +2,24 @@ import { getTSConfig, getCompilerFiles, compiler_checkAvailable, TSConfigOptions
 
 import { File } from "./File";
 
+export function copyAssetFile(assetsPath:string){
+    let file = new File($path.resolve("root"));
+    if(file.exists && !file.isFile()){
+        xCopy(file.nativePath,assetsPath + "/");
+    }
+
+
+    file = new File($path.resolve("assets"));
+    if(file.exists && !file.isFile()){
+        xCopy(file.nativePath,assetsPath + "/assets/");
+    }
+
+    file = new File($path.resolve("js"));
+    if(file.exists && !file.isFile()){
+        xCopy(file.nativePath,assetsPath + "/lib/");
+    }
+}
+
 export function referenceJs(){
     var ts = getTSConfig();
 
@@ -37,21 +55,7 @@ export function referenceJs(){
    
     
 
-    let file = new File($path.resolve("root"));
-    if(file.exists && !file.isFile()){
-        xCopy(file.nativePath,assetsPath + "/");
-    }
-
-
-    file = new File($path.resolve("assets"));
-    if(file.exists && !file.isFile()){
-        xCopy(file.nativePath,assetsPath + "/assets/");
-    }
-
-    file = new File($path.resolve("js"));
-    if(file.exists && !file.isFile()){
-        xCopy(file.nativePath,assetsPath + "/lib/");
-    }
+    copyAssetFile(assetsPath);
     
     
 }
