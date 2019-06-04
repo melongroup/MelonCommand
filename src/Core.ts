@@ -98,7 +98,6 @@ export async function xCopy(from:string,to:string,debug = false){
 
 
 export async function doCommand(cmd:string){
-    console.log(cmd);
     return await new Promise(resolve => {
         exec(cmd, { encoding: 'buffer' }, (error, stdout) => {
             let err:string;
