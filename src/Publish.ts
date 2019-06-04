@@ -42,7 +42,9 @@ export async function releaseProject(){
         return;
     }
 
-    if(ts.templete==undefined){
+    let {name,mini,d,nohtml} = Core.config;
+
+    if(ts.templete==undefined && !nohtml){
         loger("cann't release nodejs project ");
         return;
     }
@@ -50,8 +52,6 @@ export async function releaseProject(){
 
     let list = getCompilerFiles(ts);
     let thisdir = new File(ts.root);
-
-    let {name,mini,d,nohtml} = Core.config;
 
     if(!name){
         name = "game.js"

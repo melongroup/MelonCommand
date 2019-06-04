@@ -29,6 +29,8 @@ export interface IArgs{
     h:boolean;
     help:boolean;
 
+    wechat:boolean;
+
     params:string[];
 }
 
