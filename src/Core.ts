@@ -12,8 +12,9 @@ export interface IArgs{
 
     r:boolean;
     release:boolean;
-
     mini:boolean;
+    name:string;
+    d:boolean; //declaration
 
     p:boolean
     publish:boolean

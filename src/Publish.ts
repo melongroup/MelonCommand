@@ -3,17 +3,19 @@ import { File } from "./File";
 import { updateIndexHtml, copyAssetFile } from "./Index";
 
 
-export function compilerGetCommand(list:string[],ts:TSConfigOptions){
+export function compilerGetCommand(list:string[],ts:TSConfigOptions,name:string,declaration:boolean){
     let compileparams:string[];
 
     let compilerCompiler = ts.compilerOptions;
 
     compileparams = ["target","module","sourceMap","rootDir","lib" ,"declaration"];    
 
+
     compileparams.push("outFile");
-    compilerCompiler.outFile = new File(ts.root).resolvePath("bin-release/game.js").nativePath;
+    compilerCompiler.outFile = new File(ts.root).resolvePath("bin-release/"+name).nativePath;
     compilerCompiler.module = "amd";
     compilerCompiler.sourceMap = false;
+    compilerCompiler.declaration = declaration;
    
     let compilekey = "";
     compileparams.forEach(element => {
@@ -48,8 +50,14 @@ export async function releaseProject(){
 
     let list = getCompilerFiles(ts);
     let thisdir = new File(ts.root);
+
+    let {name,mini,d} = Core.config;
+
+    if(!name){
+        name = "game.js"
+    }
     
-    let cmd = compilerGetCommand(list,ts);
+    let cmd = compilerGetCommand(list,ts,name,d);
     let cmdfile = thisdir.resolvePath("tmp.cmd");
     cmd = `@echo off\ncd ${thisdir.nativePath}\n${cmd}`
     cmdfile.writeUTF8(cmd);
@@ -65,23 +73,25 @@ export async function releaseProject(){
     }else{
         loger(`compile Complete! ${list.length} files use ${new Date().getTime() - time}ms`);
         let out = new File(ts.root).resolvePath("bin-release/index.html");
-        updateIndexHtml(ts,["game.js"],out);
+        updateIndexHtml(ts,[name],out);
     }
 
-    cmd = `xcopy ${thisdir.resolvePath(ts.compilerOptions.outDir+"lib/").nativePath.replace(/\//g,"\\")+"*"} ${thisdir.resolvePath("bin-release/lib/").nativePath.replace(/\//g,"\\")}  /s /e /h /r /k /y /d `
-    r = await doCommand(cmd);
-    if(r[0]){
-        loger("error:"+r)
-        return;
+    let libFile = thisdir.resolvePath(ts.compilerOptions.outDir+"lib/");
+
+    if(libFile.exists){
+        cmd = `xcopy ${thisdir.resolvePath(ts.compilerOptions.outDir+"lib/").nativePath.replace(/\//g,"\\")+"*"} ${thisdir.resolvePath("bin-release/lib/").nativePath.replace(/\//g,"\\")}  /s /e /h /r /k /y /d `
+        r = await doCommand(cmd);
+        if(r[0]){
+            loger("error:"+r)
+            return;
+        }
     }
-
-
 
     let root = thisdir.resolvePath("bin-release/");
 
     copyAssetFile(root.nativePath.replace(/\//g,"\\"));
 
-    if(Core.config.mini){
+    if(mini){
         let jslist = root.getAllFiles(".js",2);
 
         for (let i = 0; i < jslist.length; i++) {
