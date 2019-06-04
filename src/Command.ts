@@ -20,19 +20,21 @@ function convertParam(str:string){
 }
 
 function convertArgv(argv:string[]){
-    var o = {};
+    var o = {params:[]};
     for (let i = 2; i < argv.length; i++) {
         const key = argv[i];
+        let convertKey = convertParam(key)
         if(key.indexOf("--") == 0){
             let value = argv[i+1];
             if(value && value.indexOf("-") != 0){
-                o[convertParam(key)] = value;
+                o[convertKey] = value;
                 i += 1;
             }else{
-                o[convertParam(key)] = true;
+                o[convertKey] = true;
             }
         }else{
-            o[convertParam(key)] = true;
+            o[convertKey] = true;
+            o.params.push(convertKey);
         }
     }
     return o;

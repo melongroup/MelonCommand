@@ -28,6 +28,8 @@ export interface IArgs{
     
     h:boolean;
     help:boolean;
+
+    params:string[];
 }
 
 
@@ -53,6 +55,12 @@ export interface TSConfigOptions{
     templete:string;
     platform:string;
     clientRemote:string;
+
+    engine:{
+        remote:string,
+        files:string[]
+    }
+
 }
 
 export class Core{
@@ -88,6 +96,7 @@ export async function xCopy(from:string,to:string,debug = false){
 
 
 export async function doCommand(cmd:string){
+    console.log(cmd);
     return await new Promise(resolve => {
         exec(cmd, { encoding: 'buffer' }, (error, stdout) => {
             let err:string;
@@ -97,6 +106,9 @@ export async function doCommand(cmd:string){
                 // err = new TextDecoder("GBK").decode(stdout);
             } catch (error) {
                 err = rf.byte_decodeUTF8(stdout);
+            }
+            if(error){
+                console.log(err);
             }
             resolve([error,err])
         });
@@ -115,15 +127,16 @@ export async function confirm(msg:string){
     });
 }
 
+export function removeComments(content:string){
+    var reg1 = /\/\/.*/g;
+    var r=content.replace(reg1, '');
+    var reg2 = /\/\*[\s\S]*?\*\/[^\*]/g;
+    r = r.replace(reg2, '');
+    return r;
+}
+
 
 export function getTSConfig(){
-    function removeComments(content:string){
-        var reg1 = /\/\/.*/g;
-        var r=content.replace(reg1, '');
-        var reg2 = /\/\*[\s\S]*?\*\/[^\*]/g;
-        r = r.replace(reg2, '');
-        return r;
-    }
 
 
     let configPath = Core.config.config;
@@ -131,6 +144,25 @@ export function getTSConfig(){
         configPath = "tsconfig.json"
     }
 
+    let tsconfig = new File($path.resolve(configPath));
+
+    if(tsconfig.exists){
+        try {
+            let ts = JSON.parse(removeComments(tsconfig.readUTF8())) as TSConfigOptions;
+            ts.root = new File($path.resolve("")).nativePath;
+            return ts;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    console.log("cann't find 'tsconfig.json'")
+
+    return undefined;
+}
+
+export function getPackageJson(){
+    let configPath = "package.json";
     let tsconfig = new File($path.resolve(configPath));
 
     if(tsconfig.exists){
@@ -260,4 +292,13 @@ export function getCompilerFiles(ts:TSConfigOptions){
 
 export function loger(msg:string){
     console.log(msg);
+}
+
+export async function getBranch(){
+    let [state,value] = await doCommand("git branch") as string[];
+    if(!state){
+        let [,branch] = /\* (.*?)\n/.exec(value) as string[];
+        return branch;
+    }
+    return "master"
 }
