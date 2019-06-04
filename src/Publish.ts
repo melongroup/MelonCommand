@@ -51,7 +51,7 @@ export async function releaseProject(){
     let list = getCompilerFiles(ts);
     let thisdir = new File(ts.root);
 
-    let {name,mini,d} = Core.config;
+    let {name,mini,d,nohtml} = Core.config;
 
     if(!name){
         name = "game.js"
@@ -72,8 +72,10 @@ export async function releaseProject(){
         loger("error:"+r)
     }else{
         loger(`compile Complete! ${list.length} files use ${new Date().getTime() - time}ms`);
-        let out = new File(ts.root).resolvePath("bin-release/index.html");
-        updateIndexHtml(ts,[name],out);
+        if(nohtml == false){
+            let out = new File(ts.root).resolvePath("bin-release/index.html");
+            updateIndexHtml(ts,[name],out);
+        }
     }
 
     let libFile = thisdir.resolvePath(ts.compilerOptions.outDir+"lib/");

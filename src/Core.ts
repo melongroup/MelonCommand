@@ -15,6 +15,7 @@ export interface IArgs{
     mini:boolean;
     name:string;
     d:boolean; //declaration
+    nohtml:boolean;
 
     p:boolean
     publish:boolean
