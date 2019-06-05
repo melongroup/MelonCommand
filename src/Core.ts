@@ -65,7 +65,11 @@ export interface TSConfigOptions{
 
     projectName:string;
 
-    wechat:{[key:string]:string[]};
+    wechat:{
+        appid : string,
+        projectName : string,
+        files : {[key:string]:string[]}
+    };
 
 }
 

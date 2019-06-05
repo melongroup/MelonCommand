@@ -126,7 +126,7 @@ export async function releaseProject(){
             let path = f.nativePath.replace(releasePath,"")
             
 
-            let arr = ts.wechat[jsname];
+            let arr = ts.wechat.files ? ts.wechat.files[jsname] : undefined;
             // console.log(`${jsname}:${arr}`);
             if(arr){
                 let str = f.readUTF8();
