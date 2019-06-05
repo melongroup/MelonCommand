@@ -12,3 +12,12 @@
     console.log(`   melon release  --发布release版本`)
     console.log(`   melon publish  --发布release版本到内网测试服务器`)
 ```
+
+```javaScript
+
+    压缩版发布
+    melon release -mini
+
+    微信小程序发布
+    melon release -wechat
+```
