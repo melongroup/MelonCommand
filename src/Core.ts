@@ -63,6 +63,10 @@ export interface TSConfigOptions{
         files:string[]
     }
 
+    projectName:string;
+
+    wechat:{[key:string]:string[]};
+
 }
 
 export class Core{

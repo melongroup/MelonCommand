@@ -42,7 +42,7 @@ export async function releaseProject(){
         return;
     }
 
-    let {name,mini,d,nohtml} = Core.config;
+    let {name,mini,d,nohtml,wechat} = Core.config;
 
     if(ts.templete==undefined && !nohtml){
         loger("cann't release nodejs project ");
@@ -54,7 +54,7 @@ export async function releaseProject(){
     let thisdir = new File(ts.root);
 
     if(!name){
-        name = "game.js"
+        name = ts.projectName || "game.js"
     }
     
     let cmd = compilerGetCommand(list,ts,name,d);
@@ -72,7 +72,7 @@ export async function releaseProject(){
         loger("error:"+r)
     }else{
         loger(`compile Complete! ${list.length} files use ${new Date().getTime() - time}ms`);
-        if(nohtml == false){
+        if(!nohtml){
             let out = new File(ts.root).resolvePath("bin-release/index.html");
             updateIndexHtml(ts,[name],out);
         }
@@ -93,15 +93,61 @@ export async function releaseProject(){
 
     copyAssetFile(root.nativePath.replace(/\//g,"\\"));
 
-    if(mini){
-        let jslist = root.getAllFiles(".js",2);
+    let jslist = root.getAllFiles(".js",2);
 
+    if(mini){
         for (let i = 0; i < jslist.length; i++) {
             const f = jslist[i];
+            // console.log(f.name);
             await doCommand(`uglifyjs ${f.nativePath} -m -o ${f.nativePath}`);
         }
     }
 
+
+
+
+
+    if(wechat && ts.wechat){
+
+        let releasePath = thisdir.resolvePath("bin-release/").nativePath;
+
+        let file = thisdir.resolvePath("bin-wechat/");
+        file.mkdir();
+
+        let code = "";
+
+        for (let i = 0; i < jslist.length; i++) {
+            const f = jslist[i];
+            let jsname =f.name;
+            if(jsname == "wechat.js"){
+                continue;
+            }
+
+            let path = f.nativePath.replace(releasePath,"")
+            
+
+            let arr = ts.wechat[jsname];
+            // console.log(`${jsname}:${arr}`);
+            if(arr){
+                let str = f.readUTF8();
+                str = `${(arr[0] || "")}\n${str}\n${(arr[1] || "")}`
+                file.resolvePath(path).writeUTF8(str);    
+            }else{
+                f.copyto(file.resolvePath(path));
+            }
+
+            code += `import './${path}';\n`;
+
+        }
+
+        let gamejs = file.resolvePath("game.js");
+        if(false == gamejs.exists){
+            code += `rf.weixin = true;\nconst gamecanvas = wx.createCanvas();\nrf.launchGame({ canvas: gamecanvas, resroot:'assets/'});`
+            gamejs.writeUTF8(code);
+        }
+
+        copyAssetFile(file.nativePath.replace(/\//g,"\\"));
+    }  
 }
 
 
