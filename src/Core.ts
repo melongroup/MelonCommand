@@ -71,6 +71,8 @@ export interface TSConfigOptions{
         files : {[key:string]:string[]}
     };
 
+    main:string;
+
 }
 
 export class Core{
@@ -190,8 +192,8 @@ export function getPackageJson(){
 }
 
 
-export var referenceMatch = /\/\/\/ <reference path=\"(.*?)\"/g;
 
+export var referenceMatch = /\/\/\/ <reference path=\"(.*?)\"/g;
 
 export function getReference(files:File[],ts:TSConfigOptions) {
     referenceMatch = /reference path=\"(.*?)\"/;
@@ -236,6 +238,36 @@ export function getReference(files:File[],ts:TSConfigOptions) {
 
     return reference;
 };
+
+
+
+export function updateEs6Import(files:File[],ts:TSConfigOptions){
+    let importMatch = /import.*?\"(.[^\.]*?)\";/;
+    for (var i = 0; i < files.length; i++) {
+        var relativepath = files[i];
+        // console.log(relativepath.nativePath);
+        var content = relativepath.readUTF8();
+        var find = false;
+        while (true) {
+            var match = importMatch.exec(content);
+            if (match) {
+                // console.log(relativepath.nativePath,match[1]);
+                let importfile = match[1] as string;
+                if(importfile.indexOf(".js") == -1){
+                    content = content.replace(match[0], match[0].replace(importfile,importfile+".js"));
+                    find = true;
+                }
+            }else{
+                break;
+            }
+        }
+        if(find){
+            // console.log(relativepath.nativePath);
+            relativepath.writeUTF8(content);
+        }
+    }
+}
+
 
 
 export function compiler_checkAvailable(target:string,assets:string[]){
@@ -295,7 +327,14 @@ export function getCompilerFiles(ts:TSConfigOptions){
         }
     });
 
-    return getReference(result,ts);
+    if(ts.compilerOptions.module == "commonjs"){
+        return getReference(result,ts);
+    }
+
+
+    updateEs6Import(result,ts);
+
+    return [];
 }
 
 

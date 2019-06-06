@@ -94,6 +94,7 @@ async function main(){
 
     if(config.h || config.help){
         console.log(`current version:${new File(process.env.APPDATA + "\\npm\\node_modules\\melon\\version.txt").readUTF8().trim()}`)
+        console.log(`   melon          --编译生成html文件`)
         console.log(`   melon setup    --更新melon编译库`)
         console.log(`   melon update   --更新stage3d wechat 等lib库`)
         console.log(`   melon create   --创建web nodejs项目`)

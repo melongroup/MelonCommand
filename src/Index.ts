@@ -67,16 +67,29 @@ export function updateIndexHtml(ts:TSConfigOptions,list:string[],out?:File){
         let file = new File(ts.root).resolvePath(ts.templete);
         let contents = "";
         if(file.exists){
+
             let len = list.length;
-            for(let i = 0;i<len;i++){
-                let filename = list[i];
-                if(compiler_checkAvailable(filename,ts.exclude)){
-                    continue;
+
+            if(ts.compilerOptions.module == "commonjs"){
+                for(let i = 0;i<len;i++){
+                    let filename = list[i];
+                    if(compiler_checkAvailable(filename,ts.exclude)){
+                        continue;
+                    }
+                    filename = filename.replace(".ts", ".js");
+                    filename = filename.replace("src/", "");
+                    if(filename == ts.main){
+                        continue;
+                    }
+                    contents += "        <script src='" + filename + "'></script>\r\n";
                 }
-                filename = filename.replace(".ts", ".js");
-                filename = filename.replace("src/", "");
-                contents += "        <script src='" + filename + "'></script>\r\n";
+            }else{
+                
+                if(ts.main){
+                    contents += "        <script type=\"module\"  src='" + ts.main + "'></script>\r\n";
+                }
             }
+
             let str = file.readUTF8();
             let s1 = "<!--auto-->";
             let s2 = "<!--autoend-->";
@@ -123,7 +136,6 @@ export function updateIndexJson(ts:TSConfigOptions,list:string[]){
         if(file.exists){
             file.copyto(new File(ts.root).resolvePath(ts.compilerOptions.outDir+"index.html"));
         }
-        
     }
 
     console.log(`成功生成 js.json ${file.nativePath}`);
