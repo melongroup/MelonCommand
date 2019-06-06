@@ -247,6 +247,7 @@ export function updateEs6Import(files:File[],ts:TSConfigOptions){
         var relativepath = files[i];
         // console.log(relativepath.nativePath);
         var content = relativepath.readUTF8();
+        content = content.replace(/\.\.\//g,"___%ddt%___")
         var find = false;
         while (true) {
             var match = importMatch.exec(content);
@@ -262,6 +263,7 @@ export function updateEs6Import(files:File[],ts:TSConfigOptions){
             }
         }
         if(find){
+            content = content.replace(/___\%ddt\%___/g,"../");
             // console.log(relativepath.nativePath);
             relativepath.writeUTF8(content);
         }
