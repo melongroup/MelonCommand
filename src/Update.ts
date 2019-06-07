@@ -1,5 +1,5 @@
 import { File, __path } from "./File";
-import { Core, doCommand, getTSConfig, getBranch } from "./Core";
+import { Core, doCommand, getTSConfig, getBranch, xCopy } from "./Core";
 
 export function checkVersion(){
     let localFile = new File(process.env.APPDATA + "\\npm\\node_modules\\melon\\version.txt").readUTF8().trim();
@@ -9,7 +9,7 @@ export function checkVersion(){
 
 export async function updateVersion(){
     var root = process.env.APPDATA + "\\npm\\";
-    await doCommand(`xcopy ${Core.remoteMelon}* ${root} /s /e /h /r /k /y /d`);
+    xCopy(Core.remoteMelon + "*" , root);
     console.log("melon update complete");
 }
 

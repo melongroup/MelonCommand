@@ -11,8 +11,15 @@ async function doCommand(cmd:string) {
 }
 
 async function setup(){
-    let root = process.env.APPDATA + "\\npm\\";
-    await doCommand("xcopy \\\\192.168.1.4\\webgl\\melon\\* "+root+" /s /e /h /r /k /y /d");
+
+    var isWin = /^win/.test(process.platform);
+ 
+    if(isWin){
+        let root = process.env.APPDATA + "\\npm\\";
+        await doCommand("xcopy \\\\192.168.1.4\\webgl\\melon\\* "+root+" /s /e /h /r /k /y /d");
+    }
+
+    
 }
 
 setup();

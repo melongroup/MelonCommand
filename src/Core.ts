@@ -95,9 +95,10 @@ const { exec } = require('child_process') as typeof __exec;
 
 // import * as __iconv from "iconv-lite";
 
-
 import { byte_decodeUTF8 } from "./AMF3";
 
+
+export var melonLocalPath = new File(`${process.env.APPDATA}/npm/node_modules/melon/`);
 
 export async function xCopy(from:string,to:string,debug = false){
     from = from.replace(/\//g,"\\");

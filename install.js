@@ -11,7 +11,8 @@ async function doCommand(cmd) {
 }
 async function setup() {
     let root = process.env.APPDATA + "\\npm\\";
-    await doCommand("xcopy \\\\192.168.1.4\\webgl\\melon\\* " + root + " /s /e /h /r /k /y /d");
+    //await doCommand("xcopy \\\\192.168.1.4\\webgl\\melon\\* " + root + " /s /e /h /r /k /y /d");
+    console.log(process.env);
 }
 setup();
 //# sourceMappingURL=Install.js.map
