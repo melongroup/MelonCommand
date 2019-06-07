@@ -1,7 +1,12 @@
 # Melon指令集  windows only
 
 ```javaScript
-    npm i
+    //安装CNPM
+    npm install -g cnpm --registry=https://registry.npm.taobao.org
+    //没有安装TypeScript  可以安装一下。
+    cnpm install typescript -g
+    //安装 其他内容
+    cnpm i
 ```
 
 ```javaScript
