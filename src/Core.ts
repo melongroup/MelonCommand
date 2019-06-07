@@ -93,7 +93,10 @@ import * as __exec from "child_process";
 import { File } from "./File";
 const { exec } = require('child_process') as typeof __exec;
 
-import * as __iconv from "iconv-lite";
+// import * as __iconv from "iconv-lite";
+
+
+import { byte_decodeUTF8 } from "./AMF3";
 
 
 export async function xCopy(from:string,to:string,debug = false){
@@ -113,10 +116,10 @@ export async function doCommand(cmd:string){
             let err:string;
             try {
                 // err = require( "iconv-lite").decode(stdout,"GBK");
-                err = __iconv.decode(stdout,"GBK");
+                // err = __iconv.decode(stdout,"GBK");
                 // err = new TextDecoder("GBK").decode(stdout);
             } catch (error) {
-                err = rf.byte_decodeUTF8(stdout);
+                err = byte_decodeUTF8(stdout);
             }
             if(error){
                 console.log(err);

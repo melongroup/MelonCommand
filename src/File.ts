@@ -2,30 +2,27 @@ import * as $path from "path";
 export const __path = require("path") as typeof $path;
 
 import * as $fs from "fs";
+import { byte_encodeUTF8 } from "./AMF3";
 export const __fs = require("fs") as typeof $fs;
 
-export class File extends rf.FileReference{
+export class File{
 
-    // static FormatPath(path:string){
-    //     path = path.replace("\\","/");
-    //     if(path.IndexOf(".") == -1 && path.LastIndexOf("/") != path.Length-1){
-    //         path += "/";
-    //     }
-    //     return path;
-    // }
-
+    nativePath:string;
     constructor(path:string){
-        super(path);
+        this.nativePath = path = path.replace(/\\/g,"/");
         if(this.exists == true){
             if(this.isFile() == false){
-                let{nativePath} = this;
-                if(nativePath[nativePath.length - 1] != "/"){
-                    this.nativePath = nativePath + "/";
+                if(path[path.length - 1] != "/"){
+                    this.nativePath = path + "/";
                 }
             }   
         }
+    }
 
-        
+    get name():string{
+        let _name = this.nativePath;
+        _name = _name.slice(_name.lastIndexOf("/",_name.length - 2)).replace(/\//g,"");
+        return _name;
     }
 
     get exists(){
@@ -87,7 +84,7 @@ export class File extends rf.FileReference{
     }
 
     writeUTF8(value:string){
-        this.write(rf.byte_encodeUTF8(value));
+        this.write(byte_encodeUTF8(value));
         return this;
     }
 
@@ -121,7 +118,7 @@ export class File extends rf.FileReference{
         }else{
             f = this;
         }
-        return new File(this.join(f.nativePath , path));
+        return new File(__path.join(f.nativePath , path));
     }
 
 

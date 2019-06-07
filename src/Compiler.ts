@@ -98,7 +98,6 @@ export function compilerWechat(){
 
 
 export async function compile(option:CompilerOption){
-    rf.FileReference.CLS = File;
     var thisdir = new File($path.resolve(""));
     var root = new File($path.resolve(option.root));
     var tsconfig = root.resolvePath("tsconfig.json");

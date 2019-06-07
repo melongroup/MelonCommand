@@ -16,7 +16,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^10.12.18",
-    "iconv-lite": "^0.4.24"
+    "@types/node": "^10.12.18"
   }
 }
