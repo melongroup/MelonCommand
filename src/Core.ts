@@ -123,9 +123,9 @@ export async function doCommand(cmd:string){
             // } catch (error) {
             err = byte_decodeUTF8(stdout);
             // }
-            if(error){
-                console.log(stdout);
-            }
+            // if(error){
+            //     console.log(err);
+            // }
             resolve([error,err])
         });
     });
