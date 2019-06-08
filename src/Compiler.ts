@@ -1,5 +1,3 @@
-///<reference path="./File.ts" />
-
 import { $path, doCommand, TSConfigOptions } from "./Core";
 import { File } from "./File";
 export interface TSCompilerOptions{
