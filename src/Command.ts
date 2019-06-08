@@ -1,4 +1,4 @@
-import { $path, Core, IArgs } from "./Core";
+import { $path, Core, IArgs, getBranch } from "./Core";
 import { createProject } from "./Create";
 import { updateVersion, checkVersion, updateEngine } from "./Update";
 import { File } from "./File";
@@ -38,6 +38,8 @@ function convertArgv(argv:string[]){
 
 
 async function main(){
+
+    console.log(await getBranch());
 
 
     var config = Core.config = convertArgv(process.argv) as IArgs;
@@ -102,6 +104,8 @@ async function main(){
     referenceJs();
     // console.log($path.resolve(""));
 }
+
+
 
 main();
 

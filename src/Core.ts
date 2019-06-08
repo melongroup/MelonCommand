@@ -115,15 +115,16 @@ export async function doCommand(cmd:string){
     return await new Promise(resolve => {
         exec(cmd, { encoding: 'buffer' }, (error, stdout) => {
             let err:string;
-            try {
-                // err = require( "iconv-lite").decode(stdout,"GBK");
-                // err = __iconv.decode(stdout,"GBK");
-                // err = new TextDecoder("GBK").decode(stdout);
-            } catch (error) {
-                err = byte_decodeUTF8(stdout);
-            }
+            // try {
+            //     // err = require( "iconv-lite").decode(stdout,"GBK");
+            //     // err = __iconv.decode(stdout,"GBK");
+            //     // err = new TextDecoder("GBK").decode(stdout);
+                
+            // } catch (error) {
+            err = byte_decodeUTF8(stdout);
+            // }
             if(error){
-                console.log(err);
+                console.log(stdout);
             }
             resolve([error,err])
         });
@@ -350,7 +351,7 @@ export function loger(msg:string){
 
 export async function getBranch(){
     let [state,value] = await doCommand("git branch") as string[];
-    if(!state){
+    if(!state || !value){
         let [,branch] = /\* (.*?)\n/.exec(value) as string[];
         return branch;
     }
