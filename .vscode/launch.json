@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "启动程序",
-            "program": "${workspaceFolder}\\dest\\Command.js",
-            "args": ["-h"],
+            "program": "${workspaceFolder}/src/Command.ts",
+            "args": [""],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]

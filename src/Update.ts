@@ -2,6 +2,12 @@ import { File, __path } from "./File";
 import { Core, doCommand, getTSConfig, getBranch, xCopy } from "./Core";
 
 export function checkVersion(){
+
+    let cfg = new File(process.env.APPDATA + "\\npm\\node_modules\\melon\\cfg.txt").readUTF8();
+    if(cfg.indexOf("type=local") != -1){
+        return false;
+    }
+
     let localFile = new File(process.env.APPDATA + "\\npm\\node_modules\\melon\\version.txt").readUTF8().trim();
     let removeFile = new File(Core.remoteMelon + "node_modules\\melon\\version.txt").readUTF8().trim();
     return localFile != removeFile;

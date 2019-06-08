@@ -3,7 +3,7 @@
 
 REM set toPath=\\192.168.1.4\webgl\melon
 
-set toPath=bin-release
+set toPath=bin-melon
 
 xcopy dest\*.js %toPath%\node_modules\melon\ /s /e /h /r /k /y /d > tmp.txt 
 
@@ -28,13 +28,11 @@ del tmp.txt
 xcopy dest\melon* %toPath%\ /s /y /r /h /k /d > nul
 
 
-
-
 REM async to local
 ECHO type=local > dest\cfg.txt
 xcopy dest\cfg.txt %toPath%\node_modules\melon\ /s /e /h /r /k /y /d > nul
 for /f "tokens=*" %%i in ('node npmpath.js') do set npmpath=%%i
-xcopy bin-release\* %npmpath% /s /y /r /h /k /d > nul
+xcopy %toPath%\* %npmpath% /s /y /r /h /k /d > nul
 
 
 REM async to server
