@@ -175,7 +175,7 @@ export async function publishProject(){
 
         let to = `${ts.clientRemote}\\${branch}\\`
 
-        await xCopy( from.nativePath , to , true );
+        await xCopy( from.nativePath , to );
 
     }
 
