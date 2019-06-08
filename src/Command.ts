@@ -1,7 +1,3 @@
-require("./lib/stage3d.js");
-require("./lib/wechat.js");
-require("./lib/zlib.min.js"); 
-
 import { $path, Core, IArgs } from "./Core";
 import { createProject } from "./Create";
 import { updateVersion, checkVersion, updateEngine } from "./Update";

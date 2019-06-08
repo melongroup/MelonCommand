@@ -1,7 +1,12 @@
 
 @echo off
 
-xcopy dest\*.js \\192.168.1.4\webgl\melon\node_modules\melon\ /s /e /h /r /k /y /d > tmp.txt
+REM set toPath=\\192.168.1.4\webgl\melon
+
+set toPath=bin-release
+
+xcopy dest\*.js %toPath%\node_modules\melon\ /s /e /h /r /k /y /d > tmp.txt 
+
 
 for /f "delims=" %%i in (tmp.txt) do (
     set txt=%%i
@@ -15,9 +20,21 @@ set /a count=0
 if %result% EQU %count% goto end
 
     ECHO %date:~0,4%%date:~5,2%%date:~8,2%%time:~0,2%%time:~3,2%%time:~6,2% > dest\version.txt
-    xcopy dest\version.txt \\192.168.1.4\webgl\melon\node_modules\melon\ /s /e /h /r /k /y /d > nul
+    xcopy dest\version.txt %toPath%\node_modules\melon\ /s /e /h /r /k /y /d > nul
 
 :end
 del tmp.txt
 
-xcopy dest\melon* \\192.168.1.4\webgl\melon\ /s /y /r /h /k /d > nul
+xcopy dest\melon* %toPath%\ /s /y /r /h /k /d > nul
+
+
+
+
+REM async to local
+ECHO type=local > dest\cfg.txt
+xcopy dest\cfg.txt %toPath%\node_modules\melon\ /s /e /h /r /k /y /d > nul
+for /f "tokens=*" %%i in ('node npmpath.js') do set npmpath=%%i
+xcopy bin-release\* %npmpath% /s /y /r /h /k /d > nul
+
+
+REM async to server

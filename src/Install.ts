@@ -1,4 +1,5 @@
 import { exec } from "child_process";
+import { File, __path } from "./File";
 
 
 async function doCommand(cmd:string) {
@@ -16,10 +17,8 @@ async function setup(){
  
     if(isWin){
         let root = process.env.APPDATA + "\\npm\\";
-        await doCommand("xcopy \\\\192.168.1.4\\webgl\\melon\\* "+root+" /s /e /h /r /k /y /d");
+        await doCommand("xcopy bin-release\\* "+root+" /s /e /h /r /k /y /d");
     }
-
-    
 }
 
 setup();

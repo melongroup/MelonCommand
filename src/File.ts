@@ -38,6 +38,13 @@ export class File{
         return states.isFile();
     }
 
+    isDirectory(){
+        if(this.exists == false){
+            return false;
+        }
+        return __fs.statSync(this.nativePath).isDirectory();
+    }
+
     get extname():string{
         let _name = this.nativePath;
         return _name.slice(_name.lastIndexOf(".")).toLocaleLowerCase();            
@@ -184,6 +191,8 @@ export class File{
         __fs.unlinkSync(this.nativePath);
     }
 
+
+    
 
 
 }
