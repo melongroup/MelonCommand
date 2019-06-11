@@ -247,7 +247,7 @@ export function getReference(files:File[],ts:TSConfigOptions) {
 
 
 export function updateEs6Import(files:File[],ts:TSConfigOptions){
-    let importMatch = /import.*?\"(.[^\.]*?)\";/;
+    let importMatch = /import.*?\"(.[^\.\n]*?)\";/;
     for (var i = 0; i < files.length; i++) {
         var relativepath = files[i];
         // console.log(relativepath.nativePath);
