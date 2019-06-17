@@ -79,8 +79,23 @@ export class Core{
     static config:IArgs;
     static remotePath = "\\\\192.168.1.4\\webgl\\"
     static remoteMelon = Core.remotePath +"melon\\"
+    static binPath:string;
+    static isWin:boolean
     // static remoteCreate = Core.remotePath +"project\\"
     // static remoteEngine = Core.remotePath +"engine\\"
+    static setup(){
+
+        var isWin = /^win/.test(process.platform);
+        Core.isWin = isWin;
+
+        if(isWin){
+
+        }else{
+
+        }
+
+
+    }
 }
 
 import * as __path from "path";
@@ -96,17 +111,29 @@ const { exec } = require('child_process') as typeof __exec;
 // import * as __iconv from "iconv-lite";
 
 import { byte_decodeUTF8 } from "./AMF3";
+import { setupMaster } from "cluster";
 
 
 export var melonLocalPath = new File(`${process.env.APPDATA}/npm/node_modules/melon/`);
 
 export async function xCopy(from:string,to:string,debug = false){
-    from = from.replace(/\//g,"\\");
-    to = to.replace(/\//g,"\\");
-    if(debug){
-        loger(`xcopy ${from}* ${to} /s /e /h /r /k /y /d`);
+    let cmd:string;
+
+    if(Core.isWin){
+        from = from.replace(/\//g,"\\");
+        to = to.replace(/\//g,"\\");
+        cmd = `xcopy ${from}* ${to} /s /e /h /r /k /y /d`;
+    }else{
+        from = from.replace(/\\/g,"/");
+        to = to.replace(/\\/g,"/");
+        cmd = `rsync -a ${from}* ${to}`
     }
-    await doCommand(`xcopy ${from}* ${to} /s /e /h /r /k /y /d`);
+
+    if(debug){
+        loger(cmd);
+    }
+    
+    await doCommand(cmd);
 }
 
 

@@ -39,7 +39,16 @@ function convertArgv(argv:string[]){
 
 async function main(){
 
-    console.log(await getBranch());
+    // console.log(await getBranch());
+
+
+    Core.setup();
+
+
+    console.log(process.env);
+
+
+    return;
 
 
     var config = Core.config = convertArgv(process.argv) as IArgs;
