@@ -42,7 +42,7 @@ async function main(){
     // console.log(await getBranch());
 
 
-    Core.setup();
+    await Core.setup();
 
 
     console.log(process.env);

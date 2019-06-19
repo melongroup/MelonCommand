@@ -79,20 +79,21 @@ export class Core{
     static config:IArgs;
     static remotePath = "\\\\192.168.1.4\\webgl\\"
     static remoteMelon = Core.remotePath +"melon\\"
-    static binPath:string;
+    static binPath:File;
     static isWin:boolean
     // static remoteCreate = Core.remotePath +"project\\"
     // static remoteEngine = Core.remotePath +"engine\\"
-    static setup(){
+    static async setup(){
 
-        var isWin = /^win/.test(process.platform);
-        Core.isWin = isWin;
+        let prefixs = await doCommand("npm config get prefix");
+        
+        Core.binPath = new File((prefixs[1] as string).trim()+"/");
+        Core.isWin = /^win/.test(process.platform);
 
-        if(isWin){
-
-        }else{
-
-        }
+        // getTSConfig()
+        // if(isWin){
+        // }else{
+        // }
 
 
     }
