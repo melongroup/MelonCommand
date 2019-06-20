@@ -17,8 +17,8 @@ export interface IArgs{
     d:boolean; //declaration
     nohtml:boolean;
 
-    p:boolean
-    publish:boolean
+    p:boolean;
+    publish:boolean;
 
     web:boolean;
 
@@ -94,8 +94,7 @@ export class Core{
         // if(isWin){
         // }else{
         // }
-
-
+        
     }
 }
 
@@ -112,7 +111,7 @@ const { exec } = require('child_process') as typeof __exec;
 // import * as __iconv from "iconv-lite";
 
 import { byte_decodeUTF8 } from "./AMF3";
-import { setupMaster } from "cluster";
+import { setupMaster, listenerCount } from "cluster";
 
 
 export var melonLocalPath = new File(`${process.env.APPDATA}/npm/node_modules/melon/`);
