@@ -141,7 +141,7 @@ export class Core {
             Core.cmdPath = cmdPath;
         }
 
-        Core.remotePath = new File("//todo remote path ");
+        Core.remotePath = new File("../engine");
         Core.remoteMelon = Core.remotePath.resolvePath("melon\\");
 
 

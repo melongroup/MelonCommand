@@ -77,7 +77,7 @@ async function install_package(path:string,cmd:string,desc:string){
 async function setup(){
     let prefixs = await doCommand("npm config get prefix");
     let root = prefixs[1];
-    let remote = "//todo remote path";
+    let remote = "../engine";
     await doCommand(`xcopy ${remote}\\* ${root} /s /e /h /r /k /y /d`);
 
     await install_package(__path.join(root,"cnpm"),"npm install -g cnpm --registry=https://registry.npm.taobao.org","安装cnpm");
