@@ -31,8 +31,6 @@ xcopy dest\melon* %toPath%\ /s /y /r /h /k /d > nul
 REM async to local
 ECHO type=local > dest\cfg.txt
 xcopy dest\cfg.txt %toPath%\node_modules\melon\ /s /e /h /r /k /y /d > nul
-for /f "tokens=*" %%i in ('node npmpath.js') do set npmpath=%%i
+copy package.json %toPath%\node_modules\melon\ > nul
+for /f "tokens=*" %%i in ('npm config get prefix') do set npmpath=%%i
 xcopy %toPath%\* %npmpath% /s /y /r /h /k /d > nul
-
-
-REM async to server

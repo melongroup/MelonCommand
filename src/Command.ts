@@ -1,60 +1,110 @@
-import { $path, Core, IArgs, getBranch } from "./Core";
-import { createProject } from "./Create";
-import { updateVersion, checkVersion, updateEngine } from "./Update";
-import { File } from "./File";
-import { referenceJs } from "./Index";
-import { releaseProject, publishProject } from "./Publish";
-import { LOG_COLOR } from "./Debug";
+import { build } from "./build/Build";
+import { createProject } from "./compiler/Create";
+import { referenceJs } from "./compiler/Index";
+import { publishProject, releaseProject } from "./compiler/Publish";
+import { ConfigUtil } from "./core/ConfigUtil";
+import { Core, fullproperty, IArgs } from "./core/Core";
+import { LOG_COLOR } from "./core/Debug";
+import { File } from "./core/File";
+import { tiled_parser } from "./tiled/Tiled";
+import { checkVersion, updateEngine, updateVersion } from "./update/Update";
+import { combinedts } from "./compiler/CombineDTS";
+import { AmfTSource } from "./crack/JsonSource";
+import { TexturePack } from "./utils/TexturePack";
 
 
 
-function convertParam(str:string){
-    while(str.charAt(0) == "-"){
-        str = str.slice(1);
-    }
-    return str;
-}
+// function convertParam(str:string){
+//     while(str.charAt(0) == "-"){
+//         str = str.slice(1);
+//     }
+//     return str;
+// }
 
-function convertArgv(argv:string[]){
-    var o = {params:[]};
-    for (let i = 2; i < argv.length; i++) {
-        const key = argv[i];
-        let convertKey = convertParam(key)
-        if(key.indexOf("--") == 0){
-            let value = argv[i+1];
-            if(value && value.indexOf("-") != 0){
-                o[convertKey] = value;
-                i += 1;
-            }else{
-                o[convertKey] = true;
-            }
-        }else{
-            o[convertKey] = true;
-            o.params.push(convertKey);
-        }
-    }
-    return o;
-}
+// function convertArgv(argv:string[]){
+//     var o = {params:[]};
+//     for (let i = 2; i < argv.length; i++) {
+//         const key = argv[i];
+//         let convertKey = convertParam(key)
+//         if(key.indexOf("--") == 0){
+//             let value = argv[i+1];
+//             if(value && value.indexOf("-") != 0){
+//                 o[convertKey] = value;
+//                 i += 1;
+//             }else{
+//                 o[convertKey] = true;
+//             }
+//         }else{
+//             o[convertKey] = true;
+//             o.params.push(convertKey);
+//         }
+//     }
+//     return o;
+// }
 
 
 async function main(){
 
     // console.log(await getBranch());
 
+    // removeComments("http://127.0.0.1/project/\n//12345")
+
+
+    /*
+
+    let from = new File("D:/workspace/arcHero/com/demo/813/a/");
+
+    let list = from.getAllFiles(".atlas");
+
+    for (let i = 0; i < list.length; i++) {
+        const file = list[i];
+
+        await packAnimation(file,{fps:24}) 
+    }
+
+    // packImage(from,from)
+
+    // packAnimation(from,{fps:24})
+
+    // console.log(process.env);
+
+
+    
+
+    return;
+*/
+
+    var config = Core.config = ConfigUtil.ConvertArgv(process.argv) as IArgs;
+
+    fullproperty(config,Core.globalConfig);
+    
 
     await Core.setup();
 
 
-    console.log(process.env);
-
-
-    return;
-
-
-    var config = Core.config = convertArgv(process.argv) as IArgs;
-
-
     let needUpdateVersion = checkVersion();
+
+
+
+
+    // getCodeChinease("D:/workspace/jianghu/jianghu/src/");
+
+    // getDatChinease("D:/workspace/jianghu/conf/zhcn/trunk/")
+
+    // AmfTSource.filterTsource(Core.cmdPath)
+
+    // AmfTSource.txtToBin();
+
+
+    if(config.texturePack){
+        TexturePack.packByCommand();
+        return;
+    }
+
+
+    // TexturePack.pack({pngPath:`D:/workspace/a/a/`});
+
+    // return;
     
 
     if(config.setup){
@@ -68,14 +118,29 @@ async function main(){
     }
 
     if(needUpdateVersion){
-        console.log(`find new Melon version! please update by command '${LOG_COLOR.GREEN}melon setup${LOG_COLOR.WHITE}'`);
+        console.log(`find new Melon version! type '${LOG_COLOR.GREEN}melon setup${LOG_COLOR.WHITE}' to update`);
+    }
+
+
+    if(config.cdts){
+        combinedts();
         return;
     }
+
 
     if(config.u || config.update){
         await updateEngine();
         return;
     }
+
+
+
+    if(config.tiled){
+        await tiled_parser();
+        return;
+    }
+
+
 
     if(config.v || config.version){
         let version = new File(process.env.APPDATA + "\\npm\\node_modules\\melon\\version.txt").readUTF8().trim();
@@ -107,6 +172,12 @@ async function main(){
         console.log(`   melon create   --创建web nodejs项目`)
         console.log(`   melon release  --发布release版本`)
         console.log(`   melon publish  --发布release版本到内网测试服务器`)
+        return;
+    }
+    
+
+    if(config.build){
+        build(config.build);
         return;
     }
     
