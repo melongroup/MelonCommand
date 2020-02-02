@@ -84,6 +84,15 @@ export class TexturePack {
             if (pngDir.exists == false) {
                 return `pngPath not exists`;
             } else {
+
+                let origin = pngDir.resolvePath("origin.png");
+                if (!origin.exists) {
+                    let temp = Core.appPath.resolvePath("assets/origin.png");
+                    if (temp.exists) {
+                        temp.copyto(origin);
+                    }
+                }
+
                 cmdPath = cmdPath || `C:/Program Files/CodeAndWeb/TexturePacker/bin/`;
                 format = format || "json";
 
@@ -91,6 +100,8 @@ export class TexturePack {
 
                 if (!outPath) {
                     outDir = pngDir.parent.resolvePath(pngDir.name + "_output");
+                } else {
+                    outDir = new File(outPath);
                 }
 
                 if (!outDir.exists) {
@@ -115,8 +126,10 @@ export class TexturePack {
 
 
                 let cmd = `TexturePacker.exe ${pngPath} --format ${format} --sheet ${sheet} --data ${data} --extrude ${extrude} --texture-format ${textureFormat} ${rotation ? "" : "--disable-rotation"}`
-
+                console.log(cmd);
                 await doCommand(cmd, cmdPath);
+
+                
 
 
                 let source = this.json2Tsouce(dataFile);
@@ -139,10 +152,12 @@ export class TexturePack {
 
         let { w: width, h: height } = data.meta.size
 
-        foreach(data.frames, (v, k) => {
+        foreach(data.frames, (v, k: string) => {
 
             let { x, y, w, h } = v.frame;
             let { x: ix, y: iy } = v.spriteSourceSize;
+
+            k = k.slice(0, k.lastIndexOf("."));
 
             let vo = { x, y, w, h, ix, iy } as IBitmapSourceVO;
             refreshUV(vo, width, height);

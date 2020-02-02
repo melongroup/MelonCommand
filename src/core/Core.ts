@@ -44,7 +44,9 @@ export interface IArgs {
 
     texturePack: boolean;
 
-    out: string
+    out: string;
+
+    protobuf: string;
 
 }
 
@@ -113,6 +115,7 @@ export class Core {
     static remotePath: File;
     static remoteMelon: File;
     static binPath: File;
+    static appPath: File;
     static isWin: boolean
     static cmdPath: File;
 
@@ -126,6 +129,9 @@ export class Core {
 
         Core.binPath = new File((prefixs[1] as string).trim() + "/");
         Core.isWin = /^win/.test(process.platform);
+        Core.appPath = new File(process.mainModule.filename).parent;
+
+        console.log(Core.appPath.nativePath, Core.appPath.exists);
 
         let cmdPath: File;
         if (Core.config.path != undefined) {
@@ -251,7 +257,7 @@ export async function confirm(msg: string) {
         process.stdin.setEncoding("utf-8");
         process.stdin.on("data", function (chunk) {
             process.stdin.pause();
-            resolve(chunk.trim())
+            resolve(chunk)
         });
     });
 }

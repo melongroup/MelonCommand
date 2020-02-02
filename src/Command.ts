@@ -3,7 +3,7 @@ import { createProject } from "./compiler/Create";
 import { referenceJs } from "./compiler/Index";
 import { publishProject, releaseProject } from "./compiler/Publish";
 import { ConfigUtil } from "./core/ConfigUtil";
-import { Core, fullproperty, IArgs } from "./core/Core";
+import { Core, fullproperty, IArgs, doCommand } from "./core/Core";
 import { LOG_COLOR } from "./core/Debug";
 import { File } from "./core/File";
 import { tiled_parser } from "./tiled/Tiled";
@@ -11,8 +11,10 @@ import { checkVersion, updateEngine, updateVersion } from "./update/Update";
 import { combinedts } from "./compiler/CombineDTS";
 import { AmfTSource } from "./crack/JsonSource";
 import { TexturePack } from "./utils/TexturePack";
-
-
+import { foreach } from "./core/Attibute";
+import { excelToJson } from "./utils/Excel";
+import { getDatChinease } from "./translate/ZHCN";
+import { ProtoBuf, ProtoBufParser } from "./protobuf/ProtoBuf";
 
 // function convertParam(str:string){
 //     while(str.charAt(0) == "-"){
@@ -43,11 +45,19 @@ import { TexturePack } from "./utils/TexturePack";
 // }
 
 
-async function main(){
+async function main() {
 
     // console.log(await getBranch());
 
-    // removeComments("http://127.0.0.1/project/\n//12345")
+    // removeComments("http://127.0.0.1/project//n//12345")
+
+    // excelToJson(new File("D:/workspace/pigpark/pigpark/dev/3.数值/hero.xlsx"))
+
+    // getDatChinease("D:/workspace/a/jianghu/conf/zhcn/trunk/")
+
+//    ProtoBufParser();
+
+    // return;
 
 
     /*
@@ -76,13 +86,31 @@ async function main(){
 
     var config = Core.config = ConfigUtil.ConvertArgv(process.argv) as IArgs;
 
-    fullproperty(config,Core.globalConfig);
-    
+    fullproperty(config, Core.globalConfig);
+
 
     await Core.setup();
 
 
     let needUpdateVersion = checkVersion();
+
+
+    // foreach(process as any, (v, k) => {
+
+    //     if (typeof (v) == "string") {
+    //         console.log(`${k}:${v}`)
+    //     }
+
+    //     return true;
+    // })
+
+    // console.log(process.argv);
+
+    // console.log( process.mainModule["path"] );
+
+    // console.log(process);
+
+    // return;
 
 
 
@@ -96,7 +124,7 @@ async function main(){
     // AmfTSource.txtToBin();
 
 
-    if(config.texturePack){
+    if (config.texturePack) {
         TexturePack.packByCommand();
         return;
     }
@@ -105,67 +133,73 @@ async function main(){
     // TexturePack.pack({pngPath:`D:/workspace/a/a/`});
 
     // return;
-    
 
-    if(config.setup){
-        if(needUpdateVersion){
+    if(config.protobuf){
+
+        ProtoBufParser();
+
+        return;
+    }
+
+    if (config.setup) {
+        if (needUpdateVersion) {
             await updateVersion();
-        }else{
-            console.log("it's last version now") 
+        } else {
+            console.log("it's last version now")
         }
 
         return;
     }
 
-    if(needUpdateVersion){
+    if (needUpdateVersion) {
         console.log(`find new Melon version! type '${LOG_COLOR.GREEN}melon setup${LOG_COLOR.WHITE}' to update`);
     }
 
 
-    if(config.cdts){
+    if (config.cdts) {
         combinedts();
         return;
     }
 
 
-    if(config.u || config.update){
+    if (config.u || config.update) {
         await updateEngine();
         return;
     }
 
 
 
-    if(config.tiled){
+    if (config.tiled) {
         await tiled_parser();
         return;
     }
 
 
 
-    if(config.v || config.version){
-        let version = new File(process.env.APPDATA + "\\npm\\node_modules\\melon\\version.txt").readUTF8().trim();
-        console.log("version:"+version);
+    if (config.v || config.version) {
+        let version = new File(process.env.APPDATA + "//npm//node_modules//melon//version.txt").readUTF8().trim();
+        console.log("version:" + version);
         return;
     }
-    
-    if(config.create || config.c){
+
+    if (config.create || config.c) {
         await createProject();
         return;
     }
 
-    if(config.release || config.r){
+    if (config.release || config.r) {
         await releaseProject();
         return;
     }
 
-    if(config.p || config.publish){
+    if (config.p || config.publish) {
         await publishProject();
         return;
     }
 
 
-    if(config.h || config.help){
-        console.log(`current version:${new File(process.env.APPDATA + "\\npm\\node_modules\\melon\\version.txt").readUTF8().trim()}`)
+    if (config.h || config.help) {
+        console.log(`current version:${new File(process.env.APPDATA + "//npm//node_modules//melon//version.txt").readUTF8().trim()}`)
         console.log(`   melon          --编译生成html文件`)
         console.log(`   melon setup    --更新melon编译库`)
         console.log(`   melon update   --更新stage3d wechat 等lib库`)
@@ -174,13 +208,13 @@ async function main(){
         console.log(`   melon publish  --发布release版本到内网测试服务器`)
         return;
     }
-    
 
-    if(config.build){
+
+    if (config.build) {
         build(config.build);
         return;
     }
-    
+
     referenceJs();
     // console.log($path.resolve(""));
 }
